@@ -16,11 +16,20 @@
         header("Allow:" . json_encode($allowedMethods));
         exit;
     } else {
-        //Текущий метод совпал с разрешенными
-        if (isset($_POST['login']) && isset($_POST['password'])) {
-            $authProvider = new OAuthProvider();
+        header('content-type: application/json');
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        if (isset($data['login']) && isset($data['password'])) {
+            
+            include_once("../settings.php");
+            include_once("../aas-config.php");
 
-            $token = $authProvider->generateToken(32);
+            $db = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+            
+            $token = $token = bin2hex(random_bytes(32));
+            
             die(json_encode(array("token" => $token)));
+        } else {
+            header($_SERVER["SERVER_PROTOCOL"]." 400 - Bad Request", true, 400);
         }
     }
