@@ -20,11 +20,18 @@
         $data = json_decode(file_get_contents('php://input'), true);
         
         if (isset($data['login']) && isset($data['password'])) {
-            
-            include_once("../settings.php");
-            include_once("../aas-config.php");
+            if (!preg_match('/^[a-zA-Z0-9_]+$/', trim($data["login"]))) {
+                header($_SERVER["SERVER_PROTOCOL"]." 400 - Bad Request", true, 400);
+                die(json_encode(array("title" => "Uncorrectly username", 
+                        "message" => "Username can only contain letters, numbers and underscores.", 
+                                "code" => "001")));
+            }
+
+            include_once("../database/settings.php");
+            include_once("../config/aas-config.php");
 
             $db = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
+            $username = trim($data['login']);
             
             $token = $token = bin2hex(random_bytes(32));
             
