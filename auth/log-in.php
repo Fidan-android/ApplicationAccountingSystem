@@ -17,6 +17,10 @@
         exit;
     } else {
         //Текущий метод совпал с разрешенными
-        
-        die(json_encode(array("message" => "hello")));
+        if (isset($_POST['login']) && isset($_POST['password'])) {
+            $authProvider = new OAuthProvider();
+
+            $token = $authProvider->generateToken(32);
+            die(json_encode(array("token" => $token)));
+        }
     }
