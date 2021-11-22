@@ -3,7 +3,7 @@
     /* Все данные для подключения сервера с базой данных */
 
     //Хост, на котором стоит база данных
-    define("DB_HOST", "localhost")
+    define("DB_HOST", "localhost");
 
     //Имя базы данных
     define('DB_NAME', 'AccountingSystem');
