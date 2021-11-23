@@ -32,10 +32,25 @@
 
             $db = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
             $username = trim($data['login']);
+            $password = trim($data['password']);
             
-            $token = $token = bin2hex(random_bytes(32));
+            $response = $data->signIn(DB_PREFIX, $username, $password);
+            switch($response) {
+                case "success": {
+                    break;
+                }
+                
+                case "error": {
+                    break;
+                }
+
+                default: {
+                    break;
+                }
+            }
             
-            die(json_encode(array("token" => $token)));
+            
+            die(json_encode(array("token" => "$username wrvsdv")));
         } else {
             header($_SERVER["SERVER_PROTOCOL"]." 400 - Bad Request", true, 400);
         }
