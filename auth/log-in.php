@@ -34,23 +34,29 @@
             $username = trim($data['login']);
             $password = trim($data['password']);
             
-            $response = $data->signIn(DB_PREFIX, $username, $password);
+            $response = $db->signIn(DB_PREFIX, $username, $password);
+
             switch($response) {
                 case "success": {
+                    $token = bin2hex(random_bytes(32));
+                    $db->saveToken($username, $token);
+                    die(json_encode(array("token" => $token)));
                     break;
                 }
                 
                 case "error": {
+                    header("401 - Unauthorized", true, 401);
+                    die(json_encode(array("message" => "Неверны логин или пароль", "code" => "002")));
                     break;
                 }
-
+                
                 default: {
+                    header($_SERVER["SERVER_PROTOCOL"] . "500 - Internal Server Error", true, 500);
+                    die(json_encode(array("message" => $response)));
                     break;
                 }
             }
             
-            
-            die(json_encode(array("token" => "$username wrvsdv")));
         } else {
             header($_SERVER["SERVER_PROTOCOL"]." 400 - Bad Request", true, 400);
         }

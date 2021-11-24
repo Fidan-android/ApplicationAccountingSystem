@@ -23,17 +23,17 @@
 		//function for logging in to your account 
 		public function signIn($db_prefix, $login, $password) {
 			try {
-				$query = "SELECT password FROM " . $db_prefix . "auth WHERE login=:userlogin";
+				$query = "SELECT hash_password FROM " . $db_prefix . "auth WHERE login=:userlogin";
 				$stmt = $this->conn->prepare($query);
 				$stmt->execute(array(':userlogin' => $login));
 				$response = $stmt->fetch(PDO::FETCH_ASSOC);
 				//checking the existence of the user
-				if (count($response) == 0) return "invalid user";
+				if ($response == null) return "error";
 				//verifying the psw is correct
-				if (!password_verify($password, $response[0]["hash_password"])) return "invalid password";
+				if (!password_verify($password, $response[0]["hash_password"])) return "error";
 				else return "success";
 			} catch (PDOException $ex) {
-				return "error";
+				return $ex->getMessage();
 			}
 		}
 
@@ -43,14 +43,27 @@
 				$query = "INSERT INTO " . $db_prefix . "auth (login, hash_password, phone, firstname, middlename)
 							VALUES(:login, :password, :phone, :firstname, :middlename)";
 				$stmt = $this->conn->prepare($query);
-				$stmt->execute(array(":login" => $login, ":password" => $password, ":phone" => $phone, ":firstname" => $firstname, ":middlename" => $middlename));
-				$response = $stmt->fetch(PDO::FETCH_ASSOC);
-				//checking the existence of the user
-				if (count($response) == 0) return "invalid user";
-				//verifying the psw is correct
-				if (!password_verify($password, $response[0]["hash_password"])) return "invalid password";
-				else return "success";
+				$response = $stmt->execute(array(":login" => $login, ":password" => $password, ":phone" => $phone, ":firstname" => $firstname, ":middlename" => $middlename));
+				if ($response)
+					return "success";
+				else
+					return "error";
 			} catch(PDOException $ex) {
+				return "request error: " . $ex->getMessage();
+			}
+		}
+
+		public function saveToken($login, $token) {
+			try {
+				$query = "INSERT INTO " . $db_prefix . "tokens (login, token)
+							VALUES(:login, :token)";
+				$stmt = $this->conn->prepare($query);
+				$response = $stmt->execute(array(":login" => $login, ":token" => $token));
+				if ($response)
+					return "success";
+				else 
+					return "error";
+			} catch(PDOException $ex) {	
 				return "request error: " . $ex->getMessage();
 			}
 		}
