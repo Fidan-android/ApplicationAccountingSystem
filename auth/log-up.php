@@ -22,17 +22,28 @@
         if (isset($data['login']) && isset($data['password']) && isset($data['firstname']) 
                     && isset($data['middlename']) && isset($data['phone'])) {
             if (!preg_match('/^[a-zA-Z0-9_]+$/', trim($data["login"]))) {
-                header($_SERVER["SERVER_PROTOCOL"]." 400 - Bad Request", true, 400);
+                header($_SERVER["SERVER_PROTOCOL"] . " 400 - Bad Request", true, 400);
                 die(json_encode(array("title" => "Uncorrectly username", 
-                        "message" => "Username can only contain letters, numbers and underscores.", 
+                        "message" => "Логин может состоять только из буквы, 
+                                        цифр и символа подчеркивания.", 
                                 "code" => "001")));
             }
             
-            if (!preg_match('/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g', trim($password))) {
-                header($_SERVER["SERVER_PROTOCOL"]." 400 - Bad Request", true, 400);
-                die(json_encode(array("title" => "Uncorrectly username", 
-                        "message" => "Username can only contain letters, numbers and underscores.", 
+            if (!preg_match('/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g', 
+                                trim($data['password']))) {
+                header($_SERVER["SERVER_PROTOCOL"] . " 400 - Bad Request", true, 400);
+                die(json_encode(array("title" => "Uncorrectly password", 
+                        "message" => "Пароль должен содержать не менее 6 символов: 
+                                            хотя бы одно число, хотя бы один символ заглавной и 
+                                            прописной латинской буквы, один из специальных символов.", 
                                 "code" => "002")));
+            }
+
+            if (!preg_match('/(?:\+|\d)[\d\-\(\) ]{9,}\d/g', trim($data['phone']))){
+                header($_SERVER["SERVER_PROTOCOL"] . " 400 - Bad Request", true, 400);
+                die(json_encode(array("title" => "Uncorrectly phone", 
+                        "message" => "Телефон должен быть стандартного вида.", 
+                                "code" => "003")));
             }
 
             include_once("../database/settings.php");
@@ -41,20 +52,16 @@
             $db = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
             $username = trim($data['login']);
             $password = trim($data['password']);
+            $firstname = trim($data['firstname']);
+            $middlename = trim($date['middlename']);
+            $phone = trim($data['phone']);
             
-            $response = $db->signIn(DB_PREFIX, $username, $password);
+            $response = $db->signUp(DB_PREFIX, $username, $password, $firstname, $middlename, $phone);
 
             switch($response) {
                 case "success": {
-                    $token = bin2hex(random_bytes(32));
-                    $db->saveToken($username, $token);
-                    die(json_encode(array("token" => $token)));
-                    break;
-                }
-                
-                case "error": {
-                    header("401 - Unauthorized", true, 401);
-                    die(json_encode(array("message" => "Неверны логин или пароль", "code" => "010")));
+                    die(json_encode(array("title" => "Account created",
+                            "message" => "Аккаунт успешно создан. Пройдите аутентификацию")));
                     break;
                 }
                 

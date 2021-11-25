@@ -38,16 +38,13 @@
 		}
 
 		//function for creating an account 
-		public function signUp($db_prefix, $login, $password, $phone, $firstname, $middlename) {
+		public function signUp($db_prefix, $login, $password, $firstname, $middlename, $phone) {
 			try {
 				$query = "INSERT INTO " . $db_prefix . "auth (login, hash_password, phone, firstname, middlename)
 							VALUES(:login, :password, :phone, :firstname, :middlename)";
 				$stmt = $this->conn->prepare($query);
 				$response = $stmt->execute(array(":login" => $login, ":password" => $password, ":phone" => $phone, ":firstname" => $firstname, ":middlename" => $middlename));
-				if ($response)
-					return "success";
-				else
-					return "error";
+				return "success";
 			} catch(PDOException $ex) {
 				return "request error: " . $ex->getMessage();
 			}
