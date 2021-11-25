@@ -46,7 +46,7 @@
                 
                 case "error": {
                     header("401 - Unauthorized", true, 401);
-                    die(json_encode(array("message" => "Неверны логин или пароль", "code" => "010")));
+                    die(json_encode(array("message" => "Неверный логин или пароль", "code" => "010")));
                     break;
                 }
                 

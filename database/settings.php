@@ -30,8 +30,7 @@
 				//checking the existence of the user
 				if ($response == null) return "error";
 				//verifying the psw is correct
-				if (!password_verify($password, $response[0]["hash_password"])) return "error";
-				else return "success";
+				return password_verify($password, $response[0]["hash_password"]) ? "success" : "error";
 			} catch (PDOException $ex) {
 				return $ex->getMessage();
 			}

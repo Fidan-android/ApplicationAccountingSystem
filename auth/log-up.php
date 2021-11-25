@@ -56,7 +56,7 @@
             $middlename = trim($date['middlename']);
             $phone = trim($data['phone']);
             
-            $response = $db->signUp(DB_PREFIX, $username, password_hash($password, PASSWORD_BCRYPT), $firstname, $middlename, $phone);
+            $response = $db->signUp(DB_PREFIX, $username, password_hash($password, PASSWORD_DEFAULT), $firstname, $middlename, $phone);
 
             switch($response) {
                 case "success": {
