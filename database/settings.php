@@ -46,7 +46,7 @@
 				$response = $stmt->execute(array(":login" => $login, ":password" => $password, ":phone" => $phone, ":firstname" => $firstname, ":middlename" => $middlename));
 				return "success";
 			} catch(PDOException $ex) {
-				return "request error: " . $ex->getMessage();
+				return $ex->getMessage();
 			}
 		}
 
@@ -61,7 +61,7 @@
 				else 
 					return "error";
 			} catch(PDOException $ex) {	
-				return "request error: " . $ex->getMessage();
+				return $ex->getMessage();
 			}
 		}
     }

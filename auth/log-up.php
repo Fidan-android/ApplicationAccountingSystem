@@ -29,7 +29,7 @@
                                 "code" => "001")));
             }
             
-            if (!preg_match('/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g', 
+            if (!preg_match('/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}', 
                                 trim($data['password']))) {
                 header($_SERVER["SERVER_PROTOCOL"] . " 400 - Bad Request", true, 400);
                 die(json_encode(array("title" => "Uncorrectly password", 
@@ -56,7 +56,7 @@
             $middlename = trim($date['middlename']);
             $phone = trim($data['phone']);
             
-            $response = $db->signUp(DB_PREFIX, $username, $password, $firstname, $middlename, $phone);
+            $response = $db->signUp(DB_PREFIX, $username, password_hash($password, PASSWORD_BCRYPT), $firstname, $middlename, $phone);
 
             switch($response) {
                 case "success": {
@@ -74,5 +74,6 @@
             
         } else {
             header($_SERVER["SERVER_PROTOCOL"]." 400 - Bad Request", true, 400);
+            die(json_encode(array("message" => "Один или несколько полей запроса отсутствуют.")));
         }
     }
