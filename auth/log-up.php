@@ -29,7 +29,7 @@
                                 "code" => "001")));
             }
             
-            if (!preg_match('/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}', 
+            if (!preg_match('/^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/', 
                                 trim($data['password']))) {
                 header($_SERVER["SERVER_PROTOCOL"] . " 400 - Bad Request", true, 400);
                 die(json_encode(array("title" => "Uncorrectly password", 
@@ -39,7 +39,7 @@
                                 "code" => "002")));
             }
 
-            if (!preg_match('/(?:\+|\d)[\d\-\(\) ]{9,}\d/g', trim($data['phone']))){
+            if (!preg_match('/^(?:\+|\d)[\d\-\(\) ]{9,}\d/', trim($data['phone']))){
                 header($_SERVER["SERVER_PROTOCOL"] . " 400 - Bad Request", true, 400);
                 die(json_encode(array("title" => "Uncorrectly phone", 
                         "message" => "Телефон должен быть стандартного вида.", 
