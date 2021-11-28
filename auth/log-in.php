@@ -35,7 +35,7 @@
             $password = trim($data['password']);
             
             $response = $db->signIn(DB_PREFIX, $username, $password);
-
+            
             switch($response) {
                 case "success": {
                     $token = bin2hex(random_bytes(32));

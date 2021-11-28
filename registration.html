@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!----------------------------------------------------------------------------------------------------------->
+    <link href="css/normalize.min.css"  rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="#" rel="shortcut icon">
+    <title>Страница регистрации</title>
+</head>
+<body>
+<div class="wrapper">
+    <div class="form__wrapper">
+        <h1>Создание аккаунта</h1>
+        <br>
+        <form class="form">
+            <span class="caption">Фамилия</span>
+            <input type="text" class="field" maxlength="50" placeholder="Иванов" required>
+
+            <span class="caption">Имя</span>
+            <input type="text" class="field" maxlength="50" placeholder="Иван" required>
+
+            <span class="caption">Логин</span>
+            <input type="text" class="field" maxlength="50" placeholder="ivanov_ivan" required>
+
+            <span class="caption">Пароль</span>
+            <input type="password" class="field" maxlength="16" placeholder="******" required>
+
+            <span class="caption">Повторите пароль</span>
+            <input type="password" class="field" maxlength="16" placeholder="******" required>
+
+            <span class="caption">Номер телефона</span>
+            <input type="tel" class="field" maxlength="16" pattern="[+]{1}[0-9]{11,14}" placeholder="+78002005065" required>
+
+            <input type="submit" class="btn_blue" value="Создать">
+            <a href="login.html" class="btn_grey">Вход в аккаунт</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>

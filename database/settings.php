@@ -25,12 +25,12 @@
 			try {
 				$query = "SELECT hash_password FROM " . $db_prefix . "auth WHERE login=:userlogin";
 				$stmt = $this->conn->prepare($query);
-				$stmt->execute(array(':userlogin' => $login));
+				$stmt->execute(array(":userlogin" => $login));
 				$response = $stmt->fetch(PDO::FETCH_ASSOC);
 				//checking the existence of the user
 				if ($response == null) return "error";
 				//verifying the psw is correct
-				return password_verify($password, $response[0]["hash_password"]) ? "success" : "error";
+				return password_verify($password, $response) ? "success" : "error";
 			} catch (PDOException $ex) {
 				return $ex->getMessage();
 			}
