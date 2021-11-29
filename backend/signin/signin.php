@@ -27,8 +27,8 @@
                                 "code" => "001")));
             }
 
-            include_once("../database/settings.php");
-            include_once("../config/aas-config.php");
+            include_once("./backend/database/settings.php");
+            include_once("./backend/config/aas-config.php");
 
             $db = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);
             $username = trim($data['login']);
