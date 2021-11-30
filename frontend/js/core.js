@@ -2,77 +2,77 @@ if (sessionStorage.getItem('token')) {
     console.log("hello");
 }
 
+var data = {
+    title: "",
+    body: "",
+    link: ""
+};
+
 var loaded = true;
+
+var page = //Элементы, текст в которых будет меняться
+{
+    title: document.getElementById("title"),
+    body: document.getElementById("body")
+};
 
 OnLoad();
 
-function OnLoad()
-{
+function OnLoad() {
     var link = window.location.pathname; //Ссылка страницы без домена
 
-    //У меня сайт находится по ссылке http://localhost/spa, поэтому мне нужно обрезать часть с spa/
     var href = link.replace("/", "/login");
-
+    console.log("Onload:" + href);
     LinkClick(href);
 }
 
-function InitLinks()
-{
-    links = document.getElementsByClassName("link_internal"); //Находим все ссылки на странице
+function InitLinks() {
+    links = document.getElementsByTagName("a"); //Находим все ссылки на странице
 
-    for (var i = 0; i < links.length; i++)
-    {
-   	 //Отключаем событие по умолчанию и вызываем функцию LinkClick
-   	 links[i].addEventListener("click", function (e)
-   	 {
-   		 e.preventDefault();
-   		 LinkClick(e.target.getAttribute("href"));  
-   		 return false;
-   	 });
+    for (var i = 0; i < links.length; i++) {
+   	    //Отключаем событие по умолчанию и вызываем функцию LinkClick
+        links[i].addEventListener("click", function (e) {
+            e.preventDefault();
+            LinkClick(e.target.getAttribute("href"));  
+            return false;
+   	    });
     }
 }
 
-function LinkClick(href)
-{
+function LinkClick(href) {
     var props = href.split("/"); //Получаем параметры из ссылки. 1 - раздел, 2 - идентификатор
 
-    switch(props[1])
-    {
-   	 case "login":
-   		 SendRequest("?page=main", href); //Отправляем запрос на сервер
-   		 break;
+    switch(props[1]) {
+        case "login": {
+            SendRequest("?page=login", href); //Отправляем запрос на сервер
+   		    break;
+        }
 
-   	 case "Articles":
-   		 if(props.length == 3 && !isNaN(props[2]) && Number(props[2]) > 0) //Проверяем валидность идентификатора и тоже отправляем запрос
-   		 {
-   			 SendRequest("?page=articles&id=" + props[2], href);
-   		 }
-   		 break;
+   	    case "registration": {
+   		    SendRequest("?page=registration", href);
+   		    break;
+        }
     }
 }
 
-function SendRequest(query, link)
-{
-    var xhr = new XMLHttpRequest(); //Создаём объект для отправки запроса
+function SendRequest(query, link) {
+    //Создаём объект для отправки запроса
+    var xhr = new XMLHttpRequest(); 
 
-    xhr.open("GET", "/spa/core.php" + query, true); //Открываем соединение
+    xhr.open("GET", "/backend/core.php" + query, true); //Открываем соединение
 
-    xhr.onreadystatechange = function() //Указываем, что делать, когда будет получен ответ от сервера
-    {
-   	 if (xhr.readyState != 4) return; //Если это не тот ответ, который нам нужен, ничего не делаем
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState != 4) return; //Если это не тот ответ, который нам нужен, ничего не делаем
 
-   	 //Иначе говорим, что сайт загрузился
-   	 loaded = true;
+        //Иначе говорим, что сайт загрузился
+        loaded = true;
 
-   	 if (xhr.status == 200) //Если ошибок нет, то получаем данные
-   	 {
-   		 GetData(JSON.parse(xhr.responseText), link);
-   	 }
-   	 else //Иначе выводим сообщение об ошибке
-   	 {
-   		 alert("Loading error! Try again later.");
-   		 console.log(xhr.status + ": " + xhr.statusText);
-   	 }
+        if (xhr.status == 200) {
+            GetData(JSON.parse(xhr.responseText), link);
+        } else {
+            alert("Loading error! Try again later.");
+            console.log(xhr.status + ": " + xhr.statusText);
+        }
     }
 
     loaded = false; //Говорим, что идёт загрузка
@@ -82,33 +82,28 @@ function SendRequest(query, link)
     xhr.send(); //Отправляем запрос
 }
 
-function GetData(response, link) //Получаем данные
-{
-    data =
-    {
-   	 title: response.title,
-   	 body: response.body,
-   	 link: link
+function GetData(response, link) {
+    data = {
+        title: response.title,
+        html: response.body,
+        link: link
     };
 
     UpdatePage(); //Обновляем контент на странице
 }
 
-function ShowLoading()
-{
-    if(!loaded) //Если страница ещё не загрузилась, то выводим сообщение о загрузке
-    {
-   	 page.body.innerHTML = "Loading...";
+function ShowLoading() {
+    if(!loaded) {
+        page.body.innerHTML = "Loading...";
     }
 }
 
-function UpdatePage() //Обновление контента
-{
+function UpdatePage() {
     page.title.innerText = data.title;
-    page.body.innerHTML = data.body;
+    page.body.innerHTML = data.html;
 
     document.title = data.title;
-    window.history.pushState(data.body, data.title, "/spa" + data.link); //Меняем ссылку
+    window.history.pushState(data.body, data.title, "/" + data.link); //Меняем ссылку
 
     InitLinks(); //Инициализируем новые ссылки
 }

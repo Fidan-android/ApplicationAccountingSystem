@@ -16,5 +16,22 @@
         header("Allow:" . json_encode($allowedMethods));
         exit;
     } else {
-        
+        if (!isset($_GET['page'])) {
+            header($_SERVER["SERVER_PROTOCOL"]." 400 - Bad Request", true, 400);
+        }
+
+        include_once("./page.php");
+        $page_name = $_GET['page'];
+
+        switch($page_name) {
+            case "login": {
+                $login_page = new Page($page_name, file_get_contents("../frontend/template/login.html"));
+                die(json_encode($login_page));
+                break;
+            }
+
+            default: {
+                break;
+            }
+        }
     }
