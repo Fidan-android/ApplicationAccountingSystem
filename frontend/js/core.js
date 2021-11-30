@@ -1,6 +1,8 @@
 if (sessionStorage.getItem('token')) {
-    console.log("hello");
+
 }
+
+var links = null;
 
 var data = {
     title: "",
@@ -22,7 +24,6 @@ function OnLoad() {
     var link = window.location.pathname; //Ссылка страницы без домена
 
     var href = link.replace("/", "/login");
-    console.log("Onload:" + href);
     LinkClick(href);
 }
 
@@ -41,7 +42,6 @@ function InitLinks() {
 
 function LinkClick(href) {
     var props = href.split("/"); //Получаем параметры из ссылки. 1 - раздел, 2 - идентификатор
-
     switch(props[1]) {
         case "login": {
             SendRequest("?page=login", href); //Отправляем запрос на сервер
@@ -83,9 +83,10 @@ function SendRequest(query, link) {
 }
 
 function GetData(response, link) {
+    console.log(link);
     data = {
         title: response.title,
-        html: response.body,
+        html: response.html,
         link: link
     };
 
@@ -101,9 +102,6 @@ function ShowLoading() {
 function UpdatePage() {
     page.title.innerText = data.title;
     page.body.innerHTML = data.html;
-
-    document.title = data.title;
-    window.history.pushState(data.body, data.title, "/" + data.link); //Меняем ссылку
 
     InitLinks(); //Инициализируем новые ссылки
 }

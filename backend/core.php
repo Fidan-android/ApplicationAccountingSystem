@@ -25,8 +25,14 @@
 
         switch($page_name) {
             case "login": {
-                $login_page = new Page($page_name, file_get_contents("../frontend/template/login.html"));
+                $login_page = new Page("Авторизация", file_get_contents("../frontend/template/login.html"));
                 die(json_encode($login_page));
+                break;
+            }
+
+            case "registration": {
+                $reg_page = new Page("Регистрация", file_get_contents("../frontend/template/registration.html"));
+                die(json_encode($reg_page));
                 break;
             }
 
