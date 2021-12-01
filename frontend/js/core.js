@@ -3,6 +3,7 @@ if (sessionStorage.getItem('token')) {
 }
 
 var links = null;
+var forms = null;
 
 var data = {
     title: "",
@@ -37,6 +38,30 @@ function InitLinks() {
             LinkClick(e.target.getAttribute("href"));  
             return false;
    	    });
+    }
+}
+
+function InitForms() {
+    forms = document.getElementsByTagName("form");
+
+    for (var i = 0; i < forms.length; i++) {
+        forms[i].addEventListener("submit", e => {
+            e.preventDefault();
+            FormSubmit(forms[i]);
+            return false;
+        });
+    }
+}
+
+function FormSubmit(forma) {
+    switch(forma.name) {
+        case "login": {
+            break;
+        }
+
+        case "registration": {
+            break;
+        }
     }
 }
 
